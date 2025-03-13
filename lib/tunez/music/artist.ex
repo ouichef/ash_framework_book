@@ -23,7 +23,6 @@ defmodule Tunez.Music.Artist do
     end
 
     destroy :destroy do
-      
     end
   end
 
@@ -38,5 +37,9 @@ defmodule Tunez.Music.Artist do
 
     create_timestamp :inserted_at
     create_timestamp :updated_at
+  end
+
+  relationships do
+    has_many :albums, Tunez.Music.Album
   end
 end
