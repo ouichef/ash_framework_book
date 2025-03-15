@@ -30,13 +30,13 @@ defmodule Tunez.Music.Album do
              where: [present(:year_released)],
              message: "must be between 1950 and next year"
 
-    validate match(
-               :cover_image_url,
-               ~r"(((https://)|(/images/))[-a-zA-Z0-9@:%_\+.~#?&//=]+)\.(jpg|jpeg|gif|png|bmp|tiff|tga|svg)"
-             ),
-             where: [changing(:cover_image_url)],
-             message:
-               "must start with https:// or /images/ and end with the file format of jpg|jpeg|gif|png|bmp|tiff|tga|svg"
+    # validate match(
+    #            :cover_image_url,
+    #            ~r"(((https://)|(/images/))[-a-zA-Z0-9@:%_\+.~#?&//=]+)\.(jpg|jpeg|gif|png|bmp|tiff|tga|svg)"
+    #          ),
+    #          where: [changing(:cover_image_url)],
+    #          message:
+    #            "must start with https:// or /images/ and end with the file format of jpg|jpeg|gif|png|bmp|tiff|tga|svg"
   end
 
   attributes do
