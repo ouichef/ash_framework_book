@@ -1,0 +1,9 @@
+{
+  "version": "1",
+  "name": "Open API Specification",
+  "type": "collection",
+  "ignore": [
+    "node_modules",
+    ".git"
+  ]
+}
