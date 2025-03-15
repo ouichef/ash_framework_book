@@ -36,11 +36,6 @@ defmodule TunezWeb.Router do
     live "/albums/:id/edit", Albums.FormLive, :edit
   end
 
-  # Other scopes may use custom stacks.
-  # scope "/api", TunezWeb do
-  #   pipe_through :api
-  # end
-
   # Enable LiveDashboard and Swoosh mailbox preview in development
   if Application.compile_env(:tunez, :dev_routes) do
     # If you want to use the LiveDashboard in production, you should put
