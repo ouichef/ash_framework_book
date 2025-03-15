@@ -8,9 +8,9 @@ defmodule Tunez.Music.Artist do
     table "artists"
     repo Tunez.Repo
 
-    # custom_indexes do
-    #   index "name gin_trgm_ops", name: "artists_name_gin_index", using: "GIN"
-    # end
+    custom_indexes do
+      index "name gin_trgm_ops", name: "artists_name_gin_index", using: "GIN"
+    end
   end
 
   actions do
@@ -28,8 +28,14 @@ defmodule Tunez.Music.Artist do
         default ""
       end
 
+      pagination offset?: true, default_limit: 12
+
       # filters are where clauses
       filter expr(contains(name, ^arg(:query)))
+
+      # this would run on every search which could incur costs if the calculation was using an external service.
+
+      # prepare build(load: [:album_count, :latest_album_year_released, :cover_image_url])
     end
 
     update :update do
@@ -48,6 +54,7 @@ defmodule Tunez.Music.Artist do
 
     attribute :name, :string do
       allow_nil? false
+      public? true
     end
 
     attribute :biography, :string
@@ -56,13 +63,36 @@ defmodule Tunez.Music.Artist do
       default []
     end
 
-    create_timestamp :inserted_at
-    create_timestamp :updated_at
+    create_timestamp :inserted_at, public?: true
+    create_timestamp :updated_at, public?: true
   end
 
   relationships do
     has_many :albums, Tunez.Music.Album do
       sort year_released: :desc
     end
+  end
+
+  calculations do
+    # Because all of these perform aggregates on a associated record they can be
+    # expressed in the aggregates macro. When these are run as calculations, postgres will automatically type cast to the provided type. Aggregate functions only work on specific types- so it reduces the complexity of the query.
+
+    # calculate :album_count, :integer, expr(count(albums))
+
+    # calculate :latest_album_year_released, :integer, expr(first(albums, field: :year_released))
+
+    # calculate :cover_image_url, :string, expr(first(albums, field: :cover_image_url))
+  end
+
+  aggregates do
+    count :album_count, :albums do
+      public? true
+    end
+
+    first :latest_album_year_released, :albums, :year_released do
+      public? true
+    end
+
+    first :cover_image_url, :albums, :cover_image_url
   end
 end
